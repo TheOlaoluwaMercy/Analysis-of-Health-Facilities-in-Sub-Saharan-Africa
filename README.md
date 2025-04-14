@@ -6,3 +6,48 @@ This [dataset](https://data.humdata.org/dataset/health-facilities-in-sub-saharan
 The objective of this analysis is to explore the dataset and extract insights related to the distribution of health facilities at both the country and state (admin division) levels. It also investigates the types and ownership structures of healthcare facilities across the region.
 Subsequently, the analysis will narrow its focus to Nigeria to examine the state-level distribution of health facilities, as well as the ownership, facility type and healthcare service tiers within the country.
 
+## Data Profiling
+
+### Number of columns
+```
+SELECT COUNT(*) AS column_count
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'data_table';
+```
+| column_count |
+|--------------|
+| 8            |
+
+### Number of rows
+```
+--Number of rows
+SELECT COUNT(*) AS row_count
+FROM data_table;
+```
+
+| row_count |
+|-----------|
+| 98745     |
+
+### columns and data types
+```
+SELECT 
+    column_name,
+    data_type
+	FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'data_table';
+```
+
+| column_name     | data_type |
+|------------------|-----------|
+| Country          | varchar   |
+| Admin1           | varchar   |
+| Facility name    | varchar   |
+| Facility type    | varchar   |
+| Ownership        | varchar   |
+| Lat              | float     |
+| Long             | float     |
+| LL source        | varchar   |
+
+
+
