@@ -266,17 +266,52 @@ SELECT DISTINCT(Ownership)
 FROM data_cleaned
 ORDER BY Ownership;
 ```
-### Count Unique Ownership Types 
+
+### Transform & Highlight  the Unique Ownership Types 
 ```
-SELECT COUNT(DISTINCT(Ownership)) AS Ownership_count
-FROM data_cleaned;
+WITH Ownership_new AS (
+    SELECT 
+        CASE 
+            WHEN Ownership LIKE 'MoH%' THEN 'Ministry of Health & Partners' 
+            WHEN Ownership LIKE 'Priv%' THEN 'Private'
+            WHEN Ownership LIKE 'Publi%' THEN 'Public'
+            WHEN Ownership LIKE 'ONG%' THEN 'Non Governmental Organization'
+            WHEN Ownership = 'Govt.' THEN 'Government'
+            WHEN Ownership = 'CBO' THEN 'Community Based Organization'
+            WHEN Ownership = 'FBO' THEN 'Faith Based Organization'
+            WHEN Ownership = 'FBO/NGO' OR Ownership = 'NGO/FBO' THEN 'Faith Based Organization/Community Based Organization'
+            WHEN Ownership = 'NGO' THEN 'Non Governmental Organization'
+            ELSE Ownership
+        END AS Ownership_transformed
+    FROM data_cleaned
+)
+SELECT DISTINCT(Ownership_transformed)
+FROM Ownership_new;
 ```
+> Community Based Organization, Confessionnel, Faith Based Organization, Faith Based Organization/Community Based Organization, Government, Local authority, Ministry of Health & Partners, Non Governmental Organization, Parastatal, Private, Public
+
+### Count Unique Ownership types 
+```
+WITH Ownership_new AS (
+    SELECT 
+        CASE 
+            WHEN Ownership LIKE 'MoH%' THEN 'Ministry of Health & Partners' 
+            WHEN Ownership LIKE 'Priv%' THEN 'Private'
+            WHEN Ownership LIKE 'Publi%' THEN 'Public'
+            WHEN Ownership LIKE 'ONG%' THEN 'Non Governmental Organization'
+            WHEN Ownership = 'Govt.' THEN 'Government'
+            WHEN Ownership = 'CBO' THEN 'Community Based Organization'
+            WHEN Ownership = 'FBO' THEN 'Faith Based Organization'
+            WHEN Ownership = 'FBO/NGO' OR Ownership = 'NGO/FBO' THEN 'Faith Based Organization/Community Based Organization'
+            WHEN Ownership = 'NGO' THEN 'Non Governmental Organization'
+            ELSE Ownership
+        END AS Ownership_transformed
+    FROM data_cleaned
+)
+SELECT COUNT(DISTINCT(Ownership_transformed)) AS Ownership_count
+FROM Ownership_new;
+```
+
 |Ownership_Count|
 |---------------|
-|20             |
-
-
-
-
-
-
+|11             |
