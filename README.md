@@ -217,7 +217,7 @@ FROM data_cleaned;
 
 |AdminDivision_Count|
 |-------------------|
-|582                 |
+|582                |
 
 ## Number of facilities by Admin Divisions/State
 ```
@@ -226,4 +226,31 @@ FROM data_cleaned
 GROUP BY Admin1 , Country
 ORDER BY COUNT([Facility name]) DESC;
 ```
+
+### Highlight Unique Facilities 
+```
+SELECT DISTINCT([Facility name])
+FROM data_cleaned
+ORDER BY [Facility name];
+```
+
+### Count of Unique Facilities
+```
+SELECT COUNT(DISTINCT([Facility name])) AS Facility_Count
+FROM data_cleaned;
+```
+
+|Facility_Count|
+|--------------|
+|93460         |
+
+
+
+
+
+
+
+
+
+
 
