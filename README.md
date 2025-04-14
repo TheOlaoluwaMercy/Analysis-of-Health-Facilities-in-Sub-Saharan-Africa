@@ -125,7 +125,7 @@ FROM data_cleaned;
 | 98622     |
 
 ## Univariate Analysis
-The dataset contain 50 unique countries, 
+The dataset contains data from 50 unique countries, 582 states, 93,460 facilities, 167 facility types, and 11 ownership types.
 
 ### Highlight Unique Countries
 ```
