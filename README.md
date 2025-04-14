@@ -355,6 +355,220 @@ ORDER BY COUNT(*) DESC;
 | Faith Based Organization/Community Based Organization  | 89             |
 | Parastatal                                             | 5              |
 
+## Drilling down to Nigeria
+
+### Number of health facilities in Nigeria
+```
+SELECT COUNT(*) AS facility_count_Nigeria
+FROM data_cleaned
+WHERE Country = 'Nigeria';
+```
+
+| Country  | facility_count |
+|----------|----------------|
+| Nigeria  | 20,733         |
+
+### Number of health facilities in each state in Nigeria
+```
+SELECT Admin1,  COUNT(*) AS facility_count_Nigeria
+FROM data_cleaned
+WHERE Country = 'Nigeria'
+GROUP BY Admin1
+ORDER BY COUNT(*) DESC;
+```
+
+| Admin1                  | facility_count_Nigeria |
+|-------------------------|------------------------|
+| Katsina                 | 1270                   |
+| Niger                   | 1230                   |
+| Kano                    | 1029                   |
+| Kaduna                  | 926                    |
+| Adamawa                 | 809                    |
+| Kogi                    | 786                    |
+| Bauchi                  | 773                    |
+| Benue                   | 752                    |
+| Taraba                  | 741                    |
+| Plateau                 | 722                    |
+| Osun                    | 681                    |
+| Sokoto                  | 670                    |
+| Zamfara                 | 654                    |
+| Nasarawa                | 608                    |
+| Oyo                     | 603                    |
+| Jigawa                 | 598                    |
+| Cross River             | 576                    |
+| Kwara                   | 487                    |
+| Delta                   | 485                    |
+| Ogun                    | 481                    |
+| Enugu                   | 474                    |
+| Ondo                    | 455                    |
+| Yobe                    | 448                    |
+| Borno                   | 396                    |
+| Imo                     | 389                    |
+| River                   | 388                    |
+| Akwa Ibom               | 386                    |
+| Ebonyi                  | 376                    |
+| Kebbi                   | 373                    |
+| Anambra                 | 354                    |
+| Edo                     | 346                    |
+| Ekiti                   | 316                    |
+| Gombe                   | 315                    |
+| Lagos                   | 252                    |
+| Bayelsa                 | 206                    |
+| Abia                    | 198                    |
+| Federal Capital Territory | 180                  |
+
+### Top 5 states
+```
+SELECT TOP 5 Admin1,  COUNT(*) AS facility_count_Nigeria
+FROM data_cleaned
+WHERE Country = 'Nigeria'
+GROUP BY Admin1
+ORDER BY COUNT(*) DESC;
+```
+
+| Admin1   | facility_count_Nigeria |
+|----------|------------------------|
+| Katsina  | 1270                   |
+| Niger    | 1230                   |
+| Kano     | 1029                   |
+| Kaduna   | 926                    |
+| Adamawa  | 809                    |
+
+### Bottom 5 states
+```
+SELECT TOP 5 Admin1,  COUNT(*) AS facility_count_Nigeria
+FROM data_cleaned
+WHERE Country = 'Nigeria'
+GROUP BY Admin1
+ORDER BY COUNT(*) ASC;
+```
+| Admin1                   | facility_count_Nigeria |
+|--------------------------|------------------------|
+| Federal Capital Territory| 180                    |
+| Abia                     | 198                    |
+| Bayelsa                  | 206                    |
+| Lagos                    | 252                    |
+| Gombe                    | 315                    |
+
+
+### Number of facilities by Ownership in Nigeria
+```
+WITH Ownership_new AS (
+  SELECT 
+    CASE 
+      WHEN Ownership LIKE 'MoH%' THEN 'Ministry of Health & Partners' 
+      WHEN Ownership LIKE 'Priv%' THEN 'Private'
+      WHEN Ownership LIKE 'Publi%' THEN 'Public'
+      WHEN Ownership LIKE 'ONG%' THEN 'Non Governmental Organization'
+      WHEN Ownership = 'Govt.' THEN 'Government'
+      WHEN Ownership = 'CBO' THEN 'Community Based Organization'
+      WHEN Ownership = 'FBO' THEN 'Faith Based Organization'
+      WHEN Ownership = 'FBO/NGO' THEN 'Faith Based Organization/Community Based Organization'
+      WHEN Ownership = 'NGO' THEN 'Non Governmental Organization'
+      ELSE Ownership 
+    END AS Ownership_transformed,
+    [Facility name]
+  FROM data_cleaned
+  WHERE Country = 'Nigeria'
+)
+
+SELECT Ownership_transformed, COUNT([Facility name]) AS facility_count
+FROM Ownership_new
+GROUP BY Ownership_transformed
+ORDER BY COUNT([Facility name]) DESC;
+```
+
+| Ownership_transformed        | facility_count |
+|------------------------------|----------------|
+| NULL                         | 20,552         |
+| Community Based Organization | 126            |
+| Ministry of Health & Partners| 39             |
+| Faith Based Organization     | 16             |
+
+### Highlight Unique Facility types in Nigeria
+```
+SELECT  DISTINCT([Facility type])
+FROM data_cleaned
+WHERE Country = 'Nigeria';
+```
+
+> Basic Health Centre, Clinic, Comprehensive Health Centre, Cottage Hospital, Dispensary, District Hospital, Federal Medical Centre, General Hospital, Health Centre, Health Post, Hospital, Medical Centre, Model Health Centre, Model Primary Health Centre, Natonal Hospital, Polyclinic, Primary Health Centre, Rural Hospital, State Hospital, University Teaching Hospital
+
+### Number of facilities by Facility type in Nigeria
+```
+SELECT [Facility type], COUNT(*) as facility_count
+FROM data_cleaned
+WHERE Country = 'Nigeria'
+GROUP BY [Facility type]
+ORDER BY COUNT(*) DESC;
+```
+
+| Facility type                  | facility_count |
+|--------------------------------|----------------|
+| Primary Health Centre          | 4610           |
+| Clinic                         | 4338           |
+| Health Centre                  | 3394           |
+| Dispensary                     | 3226           |
+| Health Post                    | 3055           |
+| Basic Health Centre            | 564            |
+| General Hospital               | 529            |
+| Comprehensive Health Centre    | 434            |
+| Cottage Hospital               | 149            |
+| Hospital                       | 148            |
+| Model Health Centre            | 107            |
+| Model Primary Health Centre    | 58             |
+| University Teaching Hospital   | 25             |
+| Federal Medical Centre         | 19             |
+| Rural Hospital                 | 19             |
+| Medical Centre                 | 19             |
+| District Hospital              | 16             |
+| State Hospital                 | 12             |
+| Polyclinic                     | 10             |
+| Natonal Hospital               | 1              |
+
+### Group Facility type based on healthcare tier and return number of facilities by healthcare tier
+```
+With HealthCareTier AS (SELECT [Facility type],
+	CASE WHEN [Facility type] = 'Natonal Hospital' THEN 'Tertairy'
+		 WHEN [Facility type] LIKE '%Health Centre%' THEN 'Primary'
+		 WHEN [Facility type] LIKE '%Clinic%' THEN 'Primary'
+		 WHEN [Facility type] = 'Cottage Hospital' THEN 'Primary'
+		 WHEN [Facility type] = 'Dispensary' THEN 'Primary'
+		 WHEN [Facility type] = 'District Hospital' THEN 'Secondary'
+		 WHEN [Facility type] LIKE '%Medical Centre%' THEN 'Secondary'
+		 WHEN [Facility type] = 'Federal Medical Centre' THEN 'Secondary'
+		 WHEN [Facility type] = 'General Hospital' THEN 'Secondary'
+		 WHEN [Facility type] = 'Health Post' THEN 'Primary'
+		 WHEN [Facility type] = 'Hospital' THEN 'Secondary'
+		 WHEN [Facility type] = 'Rural Hospital' THEN 'Primary'
+		 WHEN [Facility type] = 'University Teaching Hospital' THEN 'Tertairy'
+	END AS HealthCare_tier
+FROM data_cleaned
+WHERE Country = 'Nigeria')
+
+SELECT HealthCare_tier, COUNT(*) AS facility_count
+FROM HealthCareTier
+GROUP BY HealthCare_tier;
+```
+
+| HealthCare_tier | facility_count |
+|-----------------|----------------|
+| Tertairy        | 26             |
+| NULL            | 12             |
+| Secondary       | 731            |
+| Primary         | 19,964         |
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
