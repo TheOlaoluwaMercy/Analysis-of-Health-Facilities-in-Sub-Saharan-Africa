@@ -7,6 +7,7 @@ The objective of this analysis is to explore the dataset and extract insights re
 Subsequently, the analysis will narrow its focus to Nigeria to examine the state-level distribution of health facilities, as well as the ownership, facility type and healthcare service tiers within the country.
 
 ## Data Profiling
+The dataset contains 8 columns and 98,745 rows. There are 6 categorical variables of the varchar datatype (Country, Admin1, Facility name, Facility type, Ownership, LL Source) and 2 numerical variables: Lat (Latitude) and Long (Longitude). Ownership, Lat, Long, and LL Source contain 30,448, 2,351, 2,351, and 2,350 null values, respectively. The dataset contains 123 duplicate rows. Removing the duplicate rows leaves the row count at 98,622.
 
 ### Number of columns
 ```
@@ -112,6 +113,16 @@ SELECT [Country]
 FROM dup
 WHERE row_number = 1
 ```
+### Number of rows after duplicate removal
+```
+--Number of rows
+SELECT COUNT(*) AS row_count
+FROM data_cleaned;
+```
+
+| row_count |
+|-----------|
+| 98622     |
 
 
 
