@@ -315,3 +315,56 @@ FROM Ownership_new;
 |Ownership_Count|
 |---------------|
 |11             |
+
+### Number of facilities by Ownership type
+```
+WITH Ownership_new AS (
+    SELECT 
+        CASE 
+            WHEN Ownership LIKE 'MoH%' THEN 'Ministry of Health & Partners' 
+            WHEN Ownership LIKE 'Priv%' THEN 'Private'
+            WHEN Ownership LIKE 'Publi%' THEN 'Public'
+            WHEN Ownership LIKE 'ONG%' THEN 'Non Governmental Organization'
+            WHEN Ownership = 'Govt.' THEN 'Government'
+            WHEN Ownership = 'CBO' THEN 'Community Based Organization'
+            WHEN Ownership = 'FBO' THEN 'Faith Based Organization'
+            WHEN Ownership = 'FBO/NGO' OR Ownership = 'NGO/FBO' THEN 'Faith Based Organization/Community Based Organization'
+            WHEN Ownership = 'NGO' THEN 'Non Governmental Organization'
+            ELSE Ownership
+        END AS Ownership_transformed
+    FROM data_cleaned
+)
+SELECT Ownership_transformed,  COUNT(*) AS facility_count
+FROM Ownership_new
+GROUP BY Ownership_transformed
+ORDER BY COUNT(*) DESC;
+```
+
+| Ownership_transformed                                 | facility_count |
+|--------------------------------------------------------|----------------|
+| Ministry of Health & Partners                          | 31,704         |
+| NULL                                                   | 30,365         |
+| Public                                                 | 23,957         |
+| Local authority                                        | 6,196          |
+| Faith Based Organization                               | 2,945          |
+| Private                                                | 962            |
+| Non Governmental Organization                          | 859            |
+| Government                                             | 806            |
+| Community Based Organization                           | 369            |
+| Confessionnel                                          | 365            |
+| Faith Based Organization/Community Based Organization  | 89             |
+| Parastatal                                             | 5              |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
