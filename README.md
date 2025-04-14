@@ -558,6 +558,59 @@ GROUP BY HealthCare_tier;
 | Secondary       | 731            |
 | Primary         | 19,964         |
 
+## Bivariate Analysis
+### Number of facilities by ownership and healthcare tier
+```
+WITH pivotdata AS (
+    SELECT [Facility type],
+        CASE 
+            WHEN [Facility type] = 'National Hospital' THEN 'Tertiary'
+            WHEN [Facility type] LIKE '%Health Centre%' THEN 'Primary'
+            WHEN [Facility type] LIKE '%Clinic%' THEN 'Primary'
+            WHEN [Facility type] = 'Cottage Hospital' THEN 'Primary'
+            WHEN [Facility type] = 'Dispensary' THEN 'Primary'
+            WHEN [Facility type] = 'District Hospital' THEN 'Secondary'
+            WHEN [Facility type] LIKE '%Medical Centre%' THEN 'Secondary'
+            WHEN [Facility type] = 'Federal Medical Centre' THEN 'Secondary'
+            WHEN [Facility type] = 'General Hospital' THEN 'Secondary'
+            WHEN [Facility type] = 'Health Post' THEN 'Primary'
+            WHEN [Facility type] = 'Hospital' THEN 'Secondary'
+            WHEN [Facility type] = 'Rural Hospital' THEN 'Primary'
+            WHEN [Facility type] = 'University Teaching Hospital' THEN 'Tertiary'
+        END AS HealthCare_tier,
+        CASE 
+            WHEN Ownership LIKE 'MoH%' THEN 'Ministry of Health & Partners'
+            WHEN Ownership LIKE 'Priv%' THEN 'Private'
+            WHEN Ownership LIKE 'Publi%' THEN 'Public'
+            WHEN Ownership LIKE 'ONG%' THEN 'Non-Governmental Organization'
+            WHEN Ownership = 'Govt.' THEN 'Government'
+            WHEN Ownership = 'CBO' THEN 'Community Based Organization'
+            WHEN Ownership = 'FBO' THEN 'Faith-Based Organization'
+            WHEN Ownership = 'FBO/NGO' THEN 'Faith-Based Organization/Community Based Organization'
+            WHEN Ownership = 'NGO' THEN 'Non-Governmental Organization'
+            ELSE Ownership 
+        END AS Ownership_transformed
+    FROM data_cleaned
+    WHERE Country = 'Nigeria'
+)
+
+-- Pivot query to get the counts of facilities by ownership and healthcare tier
+SELECT *
+FROM (
+    SELECT Ownership_transformed, HealthCare_tier
+    FROM pivotdata
+) AS SourceTable
+PIVOT (
+    COUNT(HealthCare_tier)
+    FOR HealthCare_tier IN ([Primary], [Secondary], [Tertiary])
+) AS PivotTable;
+```
+| Ownership_transformed        | Primary | Secondary | Tertiary |
+|------------------------------|---------|-----------|----------|
+| Faith-Based Organization     | 16      | 0         | 0        |
+| Ministry of Health & Partners| 15      | 24        | 0        |
+| NULL                         | 19807   | 707       | 25       |
+| Community Based Organization | 126     | 0         | 0        |
 
 
 
