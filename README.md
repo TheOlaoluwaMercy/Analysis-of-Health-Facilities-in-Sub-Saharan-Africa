@@ -125,6 +125,8 @@ FROM data_cleaned;
 | 98622     |
 
 ## Univariate Analysis
+The dataset contain 50 unique countries, 
+
 ### Highlight Unique Countries
 ```
 SELECT DISTINCT(Country)
