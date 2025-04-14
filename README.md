@@ -124,16 +124,84 @@ FROM data_cleaned;
 |-----------|
 | 98622     |
 
+## Univariate Analysis
+### Highlight Unique Countries
+```
+SELECT DISTINCT(Country)
+FROM data_cleaned
+ORDER BY Country;
+```              
+> Angola, Benin, Botswana, Burkina Faso, Burundi, Cameroon, Cape Verde, Central African Republic, Chad, Comoros, Congo, Cote d'Ivoire, Democratic Republic of the Congo, Djibouti, Equatorial Guinea, Eritrea, eSwatini, Ethiopia, Gabon, Gambia, Ghana, Guinea, Guinea Bissau, Kenya, Lesotho, Liberia, Madagascar, Malawi, Mali, Mauritania, Mauritius, Mozambique, Namibia, Niger, Nigeria, Rwanda, Sao Tome and Principe, Senegal, Seychelles, Sierra Leone, Somalia, South Africa, South Sudan, Sudan, Tanzania, Togo, Uganda, Zambia, Zanzibar, Zimbabwe
 
+### Count of Unique Countries
+```
+SELECT COUNT(DISTINCT(Country)) AS country_count
+FROM data_cleaned;
+```
 
+|country_count|
+|-------------|
+|50           |
 
-
-
-
-
-
-
-
+### Number of facilities by country
+```
+SELECT Country, COUNT([Facility name]) as facility_count
+FROM data_cleaned
+GROUP BY Country 
+ORDER BY COUNT([Facility name]) DESC;
+```
+| Country                         | facility_count |
+|----------------------------------|----------------|
+| Nigeria                         | 20733          |
+| Democratic Republic of the Congo| 14573          |
+| Tanzania                        | 6304           |
+| Kenya                           | 6144           |
+| Ethiopia                        | 5214           |
+| South Africa                    | 4303           |
+| Uganda                          | 3789           |
+| Cameroon                        | 3061           |
+| Niger                           | 2881           |
+| Madagascar                      | 2677           |
+| Ghana                           | 1960           |
+| Cote d'Ivoire                   | 1792           |
+| Guinea                          | 1742           |
+| South Sudan                     | 1739           |
+| Burkina Faso                    | 1721           |
+| Mozambique                      | 1579           |
+| Angola                          | 1574           |
+| Mali                            | 1478           |
+| Senegal                         | 1345           |
+| Chad                            | 1275           |
+| Zambia                          | 1263           |
+| Zimbabwe                        | 1236           |
+| Sierra Leone                    | 1120           |
+| Somalia                         | 879            |
+| Benin                           | 819            |
+| Liberia                         | 740            |
+| Burundi                         | 664            |
+| Malawi                          | 648            |
+| Mauritania                      | 645            |
+| Botswana                        | 623            |
+| Rwanda                          | 572            |
+| Central African Republic        | 555            |
+| Gabon                           | 542            |
+| Namibia                         | 369            |
+| Congo                           | 328            |
+| Sudan                           | 272            |
+| Eritrea                         | 269            |
+| Togo                            | 207            |
+| Mauritius                       | 166            |
+| Zanzibar                        | 145            |
+| eSwatini                        | 135            |
+| Lesotho                         | 117            |
+| Gambia                          | 103            |
+| Cape Verde                      | 66             |
+| Djibouti                        | 66             |
+| Comoros                         | 66             |
+| Sao Tome and Principe           | 50             |
+| Equatorial Guinea               | 47             |
+| Seychelles                      | 18             |
+| Guinea Bissau                   | 8              |
 
 
 
