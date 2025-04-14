@@ -203,5 +203,27 @@ ORDER BY COUNT([Facility name]) DESC;
 | Seychelles                      | 18             |
 | Guinea Bissau                   | 8              |
 
+### Highlight Unique Administrative divisions/state 
+```
+SELECT DISTINCT(Admin1) AS Admin_Division_or_States
+FROM data_cleaned
+ORDER BY Admin1;
+```
+### Count of Unique Administrative divisions/state
+```
+SELECT COUNT(DISTINCT(Admin1)) AS AdminDivision_Count
+FROM data_cleaned;
+```
 
+|AdminDivision_Count|
+|-------------------|
+|582                 |
+
+## Number of facilities by Admin Divisions/State
+```
+SELECT Admin1, Country, COUNT([Facility name]) as facility_count
+FROM data_cleaned
+GROUP BY Admin1 , Country
+ORDER BY COUNT([Facility name]) DESC;
+```
 
