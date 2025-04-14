@@ -49,5 +49,80 @@ WHERE TABLE_NAME = 'data_table';
 | Long             | float     |
 | LL source        | varchar   |
 
+### checking for nulls
+```
+SELECT
+  SUM(CASE WHEN Country IS NULL THEN 1 ELSE 0 END) AS null_Country,
+  SUM(CASE WHEN Admin1 IS NULL THEN 1 ELSE 0 END) AS null_Admin1,
+  SUM(CASE WHEN [Facility name] IS NULL THEN 1 ELSE 0 END) AS null_FacilityName,
+  SUM(CASE WHEN [Facility type] IS NULL THEN 1 ELSE 0 END) AS null_FacilityType,
+  SUM(CASE WHEN Ownership IS NULL THEN 1 ELSE 0 END) AS null_Ownership,
+  SUM(CASE WHEN Lat IS NULL THEN 1 ELSE 0 END) AS null_Lat,
+  SUM(CASE WHEN Long IS NULL THEN 1 ELSE 0 END) AS null_Long,
+  SUM(CASE WHEN [LL source] IS NULL THEN 1 ELSE 0 END) AS null_LLSource
+FROM data_table;
+```
+| null_Country | null_Admin1 | null_FacilityName | null_FacilityType | null_Ownership | null_Lat | null_Long | null_LLSource |
+|--------------|-------------|-------------------|--------------------|----------------|----------|-----------|----------------|
+| 0            | 0           | 0                 | 0                  | 30448          | 2351     | 2351      | 2350           |
+
+### duplicate rows count
+```
+WITH dup AS (SELECT *, 
+		ROW_NUMBER() OVER(PARTITION BY [Country]
+      ,[Admin1]
+      ,[Facility name]
+      ,[Facility type]
+      ,[Ownership]
+      ,[Lat]
+      ,[Long]
+      ,[LL source] ORDER BY (SELECT NULL)) AS row_number
+FROM data_table)
+
+SELECT COUNT(*) AS duplicaterowcount
+FROM dup
+WHERE row_number > 1
+```
+| column_name       | value  |
+|-------------------|--------|
+| duplicaterowcount | 123    |
+
+### create view(data_cleaned) to store dataset without duplicates
+```
+CREATE VIEW  data_cleaned AS
+ WITH dup AS (SELECT *, 
+		ROW_NUMBER() OVER(PARTITION BY [Country]
+      ,[Admin1]
+      ,[Facility name]
+      ,[Facility type]
+      ,[Ownership]
+      ,[Lat]
+      ,[Long]
+      ,[LL source] ORDER BY (SELECT NULL)) AS row_number
+FROM data_table)
+
+SELECT [Country]
+      ,[Admin1]
+      ,[Facility name]
+      ,[Facility type]
+      ,[Ownership]
+      ,[Lat]
+      ,[Long]
+      ,[LL source] 
+FROM dup
+WHERE row_number = 1
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 
