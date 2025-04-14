@@ -244,10 +244,36 @@ FROM data_cleaned;
 |--------------|
 |93460         |
 
+### Highlight Facility type
+```
+SELECT DISTINCT([Facility type])
+FROM data_cleaned
+ORDER BY [Facility type];
+```
+### Count Unique Facility type
+```
+SELECT COUNT(DISTINCT([Facility type])) AS FacilityType_Count
+FROM data_cleaned;
+```
 
+|FacilityTpe_Count|
+|-----------------|
+|167              |
 
-
-
+### Highlight Unique Ownership Types 
+```
+SELECT DISTINCT(Ownership)
+FROM data_cleaned
+ORDER BY Ownership;
+```
+### Count Unique Ownership Types 
+```
+SELECT COUNT(DISTINCT(Ownership)) AS Ownership_count
+FROM data_cleaned;
+```
+|Ownership_Count|
+|---------------|
+|20             |
 
 
 
