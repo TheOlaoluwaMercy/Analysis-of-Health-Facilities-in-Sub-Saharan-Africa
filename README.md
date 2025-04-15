@@ -146,6 +146,7 @@ FROM data_cleaned;
 |50           |
 
 ### Number of facilities by country
+Nigeria, the Democratic Republic of the Congo, and Tanzania have the highest number of healthcare facilities, while Equatorial Guinea, Seychelles, and Guinea-Bissau have the fewest.
 ```
 SELECT Country, COUNT([Facility name]) as facility_count
 FROM data_cleaned
@@ -237,6 +238,7 @@ ORDER BY [Facility name];
 ```
 
 ### Count of Unique Facilities
+The number of unique facilities is lower than the total row count in the dataset because some facilities appear in multiple locations, such as satellite branches
 ```
 SELECT COUNT(DISTINCT([Facility name])) AS Facility_Count
 FROM data_cleaned;
@@ -262,7 +264,8 @@ FROM data_cleaned;
 |-----------------|
 |167              |
 
-### Highlight Unique Ownership Types 
+### Highlight Unique Ownership Types
+This returned 20 different ownership types, most of which required data cleaning and transformation to ensure uniformity.
 ```
 SELECT DISTINCT(Ownership)
 FROM data_cleaned
@@ -319,6 +322,7 @@ FROM Ownership_new;
 |11             |
 
 ### Number of facilities by Ownership type
+The Ministry of Health & Partners owned the largest share of healthcare facilities.
 ```
 WITH Ownership_new AS (
     SELECT 
@@ -358,6 +362,7 @@ ORDER BY COUNT(*) DESC;
 | Parastatal                                             | 5              |
 
 ## Drilling down to Nigeria
+The dataset reports 20,733 healthcare facilities in Nigeria.
 
 ### Number of health facilities in Nigeria
 ```
@@ -371,6 +376,7 @@ WHERE Country = 'Nigeria';
 | Nigeria  | 20,733         |
 
 ### Number of health facilities in each state in Nigeria
+Katsina, Niger, Kano, Kaduna, and Adamawa recorded the highest volumes, while Gombe, Lagos, Bayelsa, Abia, and the FCT recorded the fewest.
 ```
 SELECT Admin1,  COUNT(*) AS facility_count_Nigeria
 FROM data_cleaned
@@ -454,6 +460,7 @@ ORDER BY COUNT(*) ASC;
 
 
 ### Number of facilities by Ownership in Nigeria
+ Ownership was unspecified for the majority of healthcare facilities in Nigeria; however, for those with specified ownership, Community Based Organizations took the lead.
 ```
 WITH Ownership_new AS (
   SELECT 
@@ -529,6 +536,7 @@ ORDER BY COUNT(*) DESC;
 | Natonal Hospital               | 1              |
 
 ### Group Facility type based on healthcare tier and return number of facilities by healthcare tier
+Based on healthcare tier, the majority of health facilities are primary healthcare institutions.
 ```
 With HealthCareTier AS (SELECT [Facility type],
 	CASE WHEN [Facility type] = 'Natonal Hospital' THEN 'Tertairy'
